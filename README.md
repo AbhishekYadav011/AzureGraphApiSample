@@ -1,22 +1,3 @@
----
-services: active-directory
-platforms: Java
-endpoint: Microsoft identity platform
-page_type: sample
-author: ramya25
-level: 200
-client: Java console daemon app
-service: Microsoft Graph
-languages:
-  - java
-products:
-  - azure
-  - azure-active-directory
-  - java
-  - office-ms-graph
-description: "This sample demonstrates how a daemon console app can get an access token to call Microsoft Graph using MSAL4J."
----
-
 # A Java sample demonstrating how a daemon console application can call Microsoft Graph using its own identity using MSAL for Java
 
 ## About this sample
@@ -30,7 +11,9 @@ This app demonstrates how to use the [Microsoft identity platform](http://aka.ms
 The console application:
 
 - Acquires an access token from Azure AD using its own identity (without a user).
-- It then calls the Microsoft Graph `/users` endpoint to retrieve a list of users, which it then displays on the screen (as a Json blob).
+- For getting user list the Microsoft Graph `/users` endpoint to retrieve a list of users using UserList.java class, which it then displays on the screen (as a Json blob).
+- For getting app list the Microsoft Graph `/applications` endpoint to retrieve a list of applications using AppList.java class.
+- For registring an App using Microsoft Graph api '/applications' with post request using RegisterApp.java class.
 
 ![Topology](./ReadmeFiles/topology.png)
 
@@ -49,22 +32,10 @@ To run this sample, you'll need:
 From your shell or command line:
 
 ```Shell
-git clone https://github.com/Azure-Samples/ms-identity-java-daemon.git
+git clone https://github.com/AbhishekYadav011/AzureGraphApiSample.git
 ```
 
 or download and extract the repository .zip file.
-
-### Step 2:  Register the sample with your Azure Active Directory tenant
-
-To register the project, you can:
-
-- either follow the steps [Step 2: Register the sample with your Azure Active Directory tenant](#step-2-register-the-sample-with-your-azure-active-directory-tenant) and [Step 3: Configure the sample to use your Azure AD tenant](#choose-the-azure-ad-tenant-where-you-want-to-create-your-applications)
-- or use PowerShell scripts that:
-  - **automatically** creates the Azure AD applications and related objects (passwords, permissions, dependencies) for you.
-  - modify the project's configuration files.
-
-If you want to use this automation, read the instructions in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
-Please note that the configuration of your code (Step 3) still needs to be done manually.
 
 Follow the steps below to manually walk through the steps to register and configure the applications.
 
@@ -94,7 +65,7 @@ As a first step you'll need to:
    - Click the **Add a permission** button and then,
    - Ensure that the **Microsoft APIs** tab is selected
    - In the *Commonly used Microsoft APIs* section, click on **Microsoft Graph**
-   - In the **Application permissions** section, ensure that the right permissions are checked: **User.Read.All**
+   - In the **Application permissions** section, ensure that the right permissions are checked: **User.Read.All** ,**Application.ReadWrite.All**
    - Select the **Add permissions** button at the bottom.
 
 1. At this stage, the permissions are assigned correctly but since the client app does not allow users to interact, the user's themselves cannot consent to these permissions.
@@ -107,7 +78,7 @@ As a first step you'll need to:
 Open the project in your IDE to configure the code.
 >In the steps below, "ClientID" is the same as "Application ID" or "AppId" and "Tenant ID" is same as "Directory ID".
 
-1. Open the `src\main\java\ClientCredentialGrant` class
+1. Open the `src\com\example\azure\graphapi\util\ClientCredentialGrant` class
 1. Find the line `private final static String TENANT_SPECIFIC_AUTHORITY` and replace `Enter_the_Tenant_Info_Here` with your Azure AD **Tenant Id**.
 1. Find the line `private final static String CONFIDENTIAL_CLIENT_ID` and replace the existing value with the **Application ID (clientId)** of the `java-daemon-console` application copied from the Azure portal.
 1. Find the line `private final static String CONFIDENTIAL_CLIENT_SECRET` and replace the existing value with the **key value** you saved during the creation of the `daemon-console` app, in the Azure portal.
@@ -118,13 +89,11 @@ From your shell or command line:
 
 - `$ mvn clean compile assembly:single`
 
-This will generate a `msal-client-credential-sample-1.0.0.jar` file in your /targets directory. Run this using your Java executable like below:
+This will generate a `AzureAppRegistration-0.0.1-SNAPSHOT.jar` file in your /targets directory. Run this using your Java executable like below:
 
-- `$ java -jar msal-client-credential-sample-1.0.0.jar`
+- `$ java -jar AzureAppRegistration-0.0.1-SNAPSHOT.jar`
 
 `Or` run it from an IDE.
-
-Application will start and it will display the users in the tenant.
 
 ## About the code
 
@@ -171,31 +140,7 @@ The relevant code for this sample is in the `ClientCredentialGrant.java` file.
 4. Call the API
 
     In this case calling "https://graph.microsoft.com/v1.0/users" with the access token as a bearer token.
-
-## Troubleshooting
-
-### Did you forget to provide admin consent? This is needed for daemon apps
-
-If you get an `Forbidden` error when calling the API, this is because the tenant administrator has not granted permissions
-to the application. Check the steps in [Register the client app (daemon-console)](#register-the-client-app-daemon-console) above.
-
-## Community Help and Support
-
-Use [Stack Overflow](http://stackoverflow.com/questions/tagged/msal) to get support from the community.
-Ask your questions on Stack Overflow first and browse existing issues to see if someone has asked your question before.
-Make sure that your questions or comments are tagged with [`msal` `java`].
-
-If you find a bug in the sample, please raise the issue on [GitHub Issues](../../issues).
-
-If you find a bug in msal4j, please raise the issue on [MSAL4J GitHub Issues](https://github.com/AzureAD/microsoft-authentication-library-for-java/issues).
-
-To provide a recommendation, visit the following [User Voice page](https://feedback.azure.com/forums/169401-azure-active-directory).
-
-## Contributing
-
-If you'd like to contribute to this sample, see [CONTRIBUTING.MD](/CONTRIBUTING.md).
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+    In this case calling "https://graph.microsoft.com/v1.0/applications" with the access token as a bearer token.
 
 ## More information
 
